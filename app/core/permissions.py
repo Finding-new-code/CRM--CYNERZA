@@ -247,3 +247,33 @@ def can_access_sales_data(user: User) -> bool:
     All roles can access sales data (with different scopes).
     """
     return user.role in [UserRole.ADMIN, UserRole.MANAGER, UserRole.SALES]
+
+
+# Lead-specific permissions
+def can_access_lead(user: User, lead) -> bool:
+    """
+    Check if user can access a specific lead.
+    
+    Args:
+        user: Current user
+        lead: Lead object to check
+        
+    Returns:
+        bool: True if user can access the lead
+    """
+    # Admin and Manager can access all leads
+    if user.role in [UserRole.ADMIN, UserRole.MANAGER]:
+        return True
+    
+    # Sales can only access assigned leads
+    if user.role == UserRole.SALES:
+        return lead.assigned_to_id == user.id
+    
+    return False
+
+
+def can_manage_all_leads(user: User) -> bool:
+    """
+    Check if user can manage all leads (not just assigned ones).
+    """
+    return user.role in [UserRole.ADMIN, UserRole.MANAGER]
