@@ -30,14 +30,15 @@ export function SalesPerformanceChart({ data }: SalesPerformanceChartProps) {
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '6px'
                     }}
-                    formatter={(value: number, name: string) => {
+                    formatter={(value, name) => {
+                        if (value === undefined) return ['', ''];
                         if (name === 'revenue') {
-                            return [`$${value.toLocaleString()}`, 'Revenue'];
+                            return [`$${Number(value).toLocaleString()}`, 'Revenue'];
                         }
                         if (name === 'conversion_rate') {
                             return [`${value}%`, 'Conversion Rate'];
                         }
-                        return [value, name];
+                        return [value, String(name)];
                     }}
                 />
                 <Legend />

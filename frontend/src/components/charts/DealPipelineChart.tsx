@@ -29,11 +29,12 @@ export function DealPipelineChart({ data }: DealPipelineChartProps) {
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '6px'
                     }}
-                    formatter={(value: number, name: string) => {
+                    formatter={(value, name) => {
+                        if (value === undefined) return ['', ''];
                         if (name === 'value') {
-                            return [`$${value.toLocaleString()}`, 'Deal Value'];
+                            return [`$${Number(value).toLocaleString()}`, 'Deal Value'];
                         }
-                        return [value, name === 'count' ? 'Deals' : name];
+                        return [value, name === 'count' ? 'Deals' : String(name)];
                     }}
                 />
                 <Bar dataKey="count" name="count" radius={[8, 8, 0, 0]}>

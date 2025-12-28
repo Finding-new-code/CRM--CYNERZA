@@ -28,7 +28,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '6px'
                     }}
-                    formatter={(value: number) => `$${value.toLocaleString()}`}
+                    formatter={(value) => value === undefined ? '' : `$${Number(value).toLocaleString()}`}
                 />
                 <Legend />
                 <Bar dataKey="revenue" fill="#8884d8" radius={[8, 8, 0, 0]} name="Actual Revenue" />

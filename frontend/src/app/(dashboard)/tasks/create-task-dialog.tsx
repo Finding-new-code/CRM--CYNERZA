@@ -28,8 +28,9 @@ export function CreateTaskDialog() {
     const createTask = useCreateTask();
     const [formData, setFormData] = useState({
         title: "",
-        priority: "medium",
-        status: "pending",
+        assigned_to_id: 1,
+        priority: "Medium",
+        status: "Pending",
         due_date: ""
     });
 
@@ -40,8 +41,9 @@ export function CreateTaskDialog() {
             setOpen(false);
             setFormData({
                 title: "",
-                priority: "medium",
-                status: "pending",
+                assigned_to_id: 1,
+                priority: "Medium",
+                status: "Pending",
                 due_date: ""
             });
         } catch (error) {
@@ -73,15 +75,26 @@ export function CreateTaskDialog() {
                             />
                         </div>
                         <div className="grid gap-2">
+                            <Label htmlFor="assigned_to_id">Assigned To (User ID)</Label>
+                            <Input
+                                id="assigned_to_id"
+                                type="number"
+                                value={formData.assigned_to_id}
+                                onChange={(e) => setFormData({ ...formData, assigned_to_id: parseInt(e.target.value) })}
+                                required
+                            />
+                        </div>
+                        <div className="grid gap-2">
                             <Label htmlFor="priority">Priority</Label>
                             <Select onValueChange={(val) => setFormData({ ...formData, priority: val })} defaultValue={formData.priority}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select priority" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="low">Low</SelectItem>
-                                    <SelectItem value="medium">Medium</SelectItem>
-                                    <SelectItem value="high">High</SelectItem>
+                                    <SelectItem value="Low">Low</SelectItem>
+                                    <SelectItem value="Medium">Medium</SelectItem>
+                                    <SelectItem value="High">High</SelectItem>
+                                    <SelectItem value="Urgent">Urgent</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -92,10 +105,10 @@ export function CreateTaskDialog() {
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="in-progress">In Progress</SelectItem>
-                                    <SelectItem value="completed">Completed</SelectItem>
-                                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                                    <SelectItem value="Pending">Pending</SelectItem>
+                                    <SelectItem value="In Progress">In Progress</SelectItem>
+                                    <SelectItem value="Completed">Completed</SelectItem>
+                                    <SelectItem value="Cancelled">Cancelled</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

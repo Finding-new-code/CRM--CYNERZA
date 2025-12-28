@@ -28,9 +28,10 @@ export function CreateDealDialog() {
     const createDeal = useCreateDeal();
     const [formData, setFormData] = useState({
         title: "",
+        customer_id: 1,
         value: 0,
-        stage: "discovery",
-        close_date: ""
+        stage: "Prospecting",
+        expected_close_date: ""
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -40,9 +41,10 @@ export function CreateDealDialog() {
             setOpen(false);
             setFormData({
                 title: "",
+                customer_id: 1,
                 value: 0,
-                stage: "discovery",
-                close_date: ""
+                stage: "Prospecting",
+                expected_close_date: ""
             });
         } catch (error) {
             console.error("Failed to create deal", error);
@@ -73,6 +75,16 @@ export function CreateDealDialog() {
                             />
                         </div>
                         <div className="grid gap-2">
+                            <Label htmlFor="customer_id">Customer ID</Label>
+                            <Input
+                                id="customer_id"
+                                type="number"
+                                value={formData.customer_id}
+                                onChange={(e) => setFormData({ ...formData, customer_id: parseInt(e.target.value) })}
+                                required
+                            />
+                        </div>
+                        <div className="grid gap-2">
                             <Label htmlFor="value">Value ($)</Label>
                             <Input
                                 id="value"
@@ -89,21 +101,22 @@ export function CreateDealDialog() {
                                     <SelectValue placeholder="Select stage" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="discovery">Discovery</SelectItem>
-                                    <SelectItem value="proposal">Proposal</SelectItem>
-                                    <SelectItem value="negotiation">Negotiation</SelectItem>
-                                    <SelectItem value="closed-won">Closed Won</SelectItem>
-                                    <SelectItem value="closed-lost">Closed Lost</SelectItem>
+                                    <SelectItem value="Prospecting">Prospecting</SelectItem>
+                                    <SelectItem value="Qualification">Qualification</SelectItem>
+                                    <SelectItem value="Proposal">Proposal</SelectItem>
+                                    <SelectItem value="Negotiation">Negotiation</SelectItem>
+                                    <SelectItem value="Closed Won">Closed Won</SelectItem>
+                                    <SelectItem value="Closed Lost">Closed Lost</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="close_date">Expected Close Date</Label>
+                            <Label htmlFor="expected_close_date">Expected Close Date</Label>
                             <Input
-                                id="close_date"
+                                id="expected_close_date"
                                 type="date"
-                                value={formData.close_date}
-                                onChange={(e) => setFormData({ ...formData, close_date: e.target.value })}
+                                value={formData.expected_close_date}
+                                onChange={(e) => setFormData({ ...formData, expected_close_date: e.target.value })}
                                 required
                             />
                         </div>
