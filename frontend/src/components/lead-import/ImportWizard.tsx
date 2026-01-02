@@ -35,9 +35,11 @@ export function ImportWizard() {
         setAnalysisData(null);
     };
 
-    const handleClose = () => {
-        setOpen(false);
-        setTimeout(handleReset, 300); // Reset after dialog closes
+    const handleOpenChange = (newOpen: boolean) => {
+        setOpen(newOpen);
+        if (!newOpen) {
+            setTimeout(handleReset, 300); // Reset after dialog closes
+        }
     };
 
     const handleUploadComplete = (data: UploadAnalysisResponse) => {
@@ -67,20 +69,10 @@ export function ImportWizard() {
                 Smart Import
             </Button>
 
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog open={open} onOpenChange={handleOpenChange}>
                 <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
                     <DialogHeader>
-                        <div className="flex items-center justify-between">
-                            <DialogTitle>Smart Lead Import</DialogTitle>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={handleClose}
-                                className="h-6 w-6"
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
-                        </div>
+                        <DialogTitle>Smart Lead Import</DialogTitle>
                     </DialogHeader>
 
                     {/* Stepper */}
@@ -161,7 +153,7 @@ export function ImportWizard() {
                         {currentStep === 'summary' && sessionId && (
                             <SummaryStep
                                 sessionId={sessionId}
-                                onClose={handleClose}
+                                onClose={() => handleOpenChange(false)}
                                 onRestart={handleReset}
                             />
                         )}

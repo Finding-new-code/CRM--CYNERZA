@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Download, Filter, FileText, FileSpreadsheet, TrendingUp, Users, DollarSign, Target } from "lucide-react";
+import { Download, Filter, FileText, FileSpreadsheet, TrendingUp, Users, DollarSign, Target, Loader2 } from "lucide-react";
 import { ChartCard } from "@/components/shared/ChartCard";
 import { ChartSkeleton } from "@/components/shared/ChartSkeleton";
 import { LeadsOverviewChart } from "@/components/charts/LeadsOverviewChart";
@@ -22,9 +22,12 @@ import { RevenueChart } from "@/components/charts/RevenueChart";
 import { SalesPerformanceChart } from "@/components/charts/SalesPerformanceChart";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { AnalyticsFilters } from "@/types/analytics";
+import { exportToPDF, exportToCSV } from "@/utils/export";
+import { toast } from "sonner";
 
 export default function ReportsPage() {
     const [filters, setFilters] = useState<AnalyticsFilters>({});
+    const [isExporting, setIsExporting] = useState(false);
     const { data: analytics, isLoading, isError } = useAnalytics(filters);
 
     const handleFilterChange = (key: keyof AnalyticsFilters, value: string) => {
@@ -34,8 +37,26 @@ export default function ReportsPage() {
         }));
     };
 
-    const handleExport = (format: 'pdf' | 'csv') => {
-        alert(`Export to ${format.toUpperCase()} - Feature coming soon!`);
+    const handleExport = async (format: 'pdf' | 'csv') => {
+        if (!analytics) {
+            toast.error("No data available to export");
+            return;
+        }
+
+        setIsExporting(true);
+        try {
+            if (format === 'pdf') {
+                exportToPDF(analytics, { start: filters.start_date, end: filters.end_date });
+                toast.success("PDF report downloaded");
+            } else {
+                exportToCSV(analytics);
+                toast.success("CSV report downloaded");
+            }
+        } catch (error) {
+            toast.error(`Failed to export ${format.toUpperCase()}`);
+        } finally {
+            setIsExporting(false);
+        }
     };
 
     const summaryStats = [
@@ -83,11 +104,11 @@ export default function ReportsPage() {
                 description="Comprehensive insights into your CRM performance"
                 action={
                     <div className="flex gap-2">
-                        <Button onClick={() => handleExport('pdf')} size="sm">
-                            <FileText className="mr-2 h-4 w-4" />
+                        <Button onClick={() => handleExport('pdf')} size="sm" disabled={isExporting || !analytics}>
+                            {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileText className="mr-2 h-4 w-4" />}
                             Export PDF
                         </Button>
-                        <Button onClick={() => handleExport('csv')} variant="outline" size="sm">
+                        <Button onClick={() => handleExport('csv')} variant="outline" size="sm" disabled={isExporting || !analytics}>
                             <FileSpreadsheet className="mr-2 h-4 w-4" />
                             Export CSV
                         </Button>
